@@ -3,7 +3,7 @@ const Product = require('../models/product');
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
 
-  const product = new Product(title, imageUrl, price, description);
+  const product = new Product(null, title, imageUrl, price, description); //1st arg is for ID
 
   product.save();
 
@@ -29,8 +29,24 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  
+  const { 
+    productId, 
+    title, 
+    imageUrl, 
+    price, 
+    description } = req.body
+
+  const updatedProduct = new Product(productId, title, imageUrl, price, description);
+  updatedProduct.save(); 
+  res.redirect('/admin/products');
 }
+
+exports.postDeleteProduct = (req, res, next) => {
+  const { productId } = req.body
+  Product.deleteById(productId);
+  res.redirect('/admin/products');
+}
+
 
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
